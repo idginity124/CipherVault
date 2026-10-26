@@ -1,0 +1,1 @@
+Synthetic CVLT fixtures produced by the retired Python SecurityCore, using `fixture-only-password`. They contain only sample records. `python-v0.cvault` tests headerless compatibility; `python-v1.cvault` uses the original 64 MiB/3-iteration/4-lane Argon2id parameters and authenticated header.
