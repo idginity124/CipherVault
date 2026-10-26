@@ -1,44 +1,50 @@
-# CipherVault
+<p align="center"><a href="README.md">English</a> &nbsp; / &nbsp; <a href="README.tr.md">Türkçe</a></p>
+<p align="center"><img src="assets/readme-hero.en.svg" width="840" alt="CipherVault — an offline encrypted vault for Android, Linux and Windows"></p>
+<p align="center"><a href="BUILDING.md">Build from source</a> &nbsp; / &nbsp; <a href="SECURITY.md">Security</a> &nbsp; / &nbsp; <a href="PRIVACY.md">Privacy</a> &nbsp; / &nbsp; <a href="LICENSE">GPLv3</a></p>
 
-One Flutter application for an offline password vault on Android, Linux and Windows. The UI adapts from a phone list to a desktop category/list/detail workspace. Application source remains private.
+<p align="center">One Flutter app for passwords, account details and private notes.<br>A shared encrypted vault format, with a workspace that adapts to mobile and desktop.</p>
+<p align="center"><strong>Version 2 is a development preview.</strong> Not independently audited. Existing v1 binaries in Releases belong to the retired implementation.</p>
 
-## Develop
+<p align="center"><a href="test/goldens/desktop.png"><img src="test/goldens/desktop.png" width="840" alt="CipherVault desktop layout with synthetic sample records"></a><br><sub>Desktop preview with sample data.</sub></p>
+<details>
+<summary>Mobile preview</summary>
+<p align="center"><img src="test/goldens/mobile.png" width="300" alt="CipherVault mobile layout with synthetic sample records"></p>
+</details>
+
+<h2 align="center">Your vault, on your device</h2>
+
+<table align="center"><tr><th>Store</th><th>Find</th><th>Move securely</th></tr><tr><td>Whole-vault encryption and a master passphrase.</td><td>Search, categories, masked passwords and a password generator.</td><td>Encrypted file backups and separately password-protected QR transfers.</td></tr></table>
+
+<p align="center">Light and dark themes · Background and idle locking · Clipboard timeout · Master-password changes</p>
+
+## Security design
+
+- AES-256-GCM encrypts the complete record list, including titles and usernames.
+- Argon2id derives the key from the master passphrase; expensive operations run off the UI isolate.
+- Every unlock requires the master passphrase. Late operations cannot unlock a session after it has been locked.
+- Fresh nonces, authenticated format headers, bounded inputs and an encrypted previous-version recovery file.
+- Multipart QR transfers carry encrypted vault data; old plaintext QR packets are rejected.
+
+Read the [security model and limitations](SECURITY.md). Automated tests do not replace an independent security audit. Back up your encrypted vault: there is no master-password reset service.
+
+## Build and migrate
 
 ```bash
+git clone https://github.com/idginity124/CipherVault.git
+cd CipherVault
 flutter pub get
 flutter run -d linux
-flutter test
-flutter analyze
 ```
 
-Windows requires the Windows Flutter/Visual Studio desktop toolchain: `flutter build windows --release`. Build on Windows; the Linux host does not produce a Windows executable. Android: `flutter build apk --debug` for a development preview. Distribution builds require your original signing key; credentials belong in ignored `android/key.properties`, never in Git.
+See [BUILDING.md](BUILDING.md) for Windows/Android commands, signing, data locations and migration. Python CVLT v0/v1 vaults can be imported. The previous mobile Hive store has an explicit read-only migration path; access depends on the original application identity and signing key. Do not uninstall an existing app before exporting its data.
 
-The canonical project is `/home/ekrem/Projects/CipherVault`. The previous mobile and desktop paths point here, so edits share one source tree.
+**Android identity:** `com.bulgan.ciphervault`. Platform runner folders are part of the same Flutter project; the application logic lives in `lib/`.
 
-## Included
+## Validation and contribution
 
-- Entire-vault AES-256-GCM encryption; Argon2id master-password derivation, off the UI isolate.
-- The same authenticated CVLT v1 format used by the old Python application.
-- Add/edit/delete, search, categories, random password generation and light/dark appearance.
-- Master password required on every unlock; lock on background and after five minutes without interaction.
-- Short-lived password reveal; guarded clipboard cleanup after 30 seconds and when locking.
-- Encrypted file export/import, separately password-protected QR transfer, duplicate-safe imports.
-- Explicit read-only migration from the previous mobile Hive store.
-- Master-password changes; encrypted previous-version recovery file.
-- Local fonts; no account, telemetry or network font loading.
+Linux release build and native launch were verified locally. An Android ARM64 preview was built and signature-checked. Thirteen tests cover encryption interoperability, migration, transfer bounds, session races and responsive UI. Windows native builds and physical Android camera/upgrade checks are still pending. [Validation scope](docs/VALIDATION.md).
 
-## Migrating your existing records
+[Contributions](CONTRIBUTING.md) are welcome. Do not submit real vaults, passwords or signing keys. CipherVault’s original code is **GPL-3.0-only**; [dependencies and fonts](THIRD_PARTY.md) retain their own licenses.
 
-Create a new vault with a master passphrase of at least 12 characters first. Existing user data is never automatically overwritten.
-
-**Old Python desktop vault:** in the transfer menu choose “Şifreli dosyadan içe aktar”, select `~/.ciphervault/secure_vault.cvault`, then enter its old master password. Both Python v0 and v1 files are accepted. An encrypted file export can also be opened by the retired Python codec (verified with synthetic fixtures).
-
-**Old Android/mobile vault:** upgrade the existing app using its original application ID **and signing key**. Do not uninstall it first: uninstalling can remove the old data and secure-storage key. Unlock the new vault, then choose “Eski CipherVault kayıtlarını taşı”. Existing Hive records and the device key are read but never deleted or replaced. Migration fails without the old key rather than inventing a replacement. Verify records and export an encrypted backup before removing any older copy. A debug APK is not a substitute for a correctly signed upgrade.
-
-**Transfer:** export a `.cvault` file or encrypted QR with a separate passphrase (minimum 12 characters), then import it on the other device. Share the passphrase separately. QR accepts only CipherVault v2 encrypted packets, has a 64-part bound and a three-minute assembly window. Large vaults should use file transfer. Old plaintext QR imports are intentionally rejected.
-
-## Data and recovery
-
-The primary file is `CipherVault/vault.cvault` under the OS application-support directory. `vault.cvault.previous` is the last encrypted version; `vault.cvault.pending` is a temporary encrypted write. If the primary is missing, the previous file can be opened. If the primary is corrupt, use the import menu to select the `.previous` file (rename a **copy** to `.cvault` if the picker filters it). The recovery file is not a substitute for an external backup. Older backups retain the password used when they were created.
-
-No master-password reset or remote recovery exists. App memory cannot be guaranteed to be forensically erased in a garbage-collected runtime. This is a development preview, not independently audited security software. See [SECURITY.md](SECURITY.md) and [validation](docs/VALIDATION.md).
+<p align="center"><img src="assets/training-arc.en.svg" width="840" alt="The Training Arc — Ekrem Bulgan"></p>
+<p align="center"><a href="https://www.ekrembulgan.com">Ekrem Bulgan</a> &nbsp; / &nbsp; <a href="https://buymeacoffee.com/ekrembulgan">Support development</a></p>

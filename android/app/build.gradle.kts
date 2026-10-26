@@ -15,13 +15,13 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.ciphervault_mobile"
+    namespace = "com.bulgan.ciphervault"
     compileSdk = flutter.compileSdkVersion
 
     ndkVersion = "27.0.12077973"
 
     defaultConfig {
-        applicationId = "com.example.ciphervault_mobile"
+        applicationId = "com.bulgan.ciphervault"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

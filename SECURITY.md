@@ -12,4 +12,4 @@ Transfers use a separately password-encrypted CVLT envelope. Multipart QR metada
 
 Legacy mobile migration is explicit and read-only. It uses the existing secure-storage key and supports the original GCM/CBC and plaintext field formats solely for migration. Old CBC data does not gain retroactive authentication. Imported fields are stored inside the new authenticated encrypted vault. Legacy dependencies are retained for this path; they are not the new storage format.
 
-This source is private. Report issues to the project owner without sending a real vault, master password, account password, screenshots of secrets or signing credentials. No independent security audit or production-readiness claim is made.
+The source is available under GPLv3. Report issues privately to the project owner without sending a real vault, master password, account password, screenshots of secrets or signing credentials. No independent security audit or production-readiness claim is made.

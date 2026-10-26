@@ -1,6 +1,7 @@
 name: ciphervault_mobile
 description: An offline encrypted vault for mobile and desktop.
 publish_to: none
+repository: https://github.com/idginity124/CipherVault
 version: 2.0.0+2
 environment:
   sdk: ^3.10.0
