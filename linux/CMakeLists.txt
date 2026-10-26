@@ -128,6 +128,6 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
 endif()
 
 # Older secure-storage migration plugin vendors a JSON header deprecated by Clang 23.
-if(TARGET flutter_secure_storage_linux_plugin AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if(TARGET flutter_secure_storage_linux_plugin AND CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 18)
   target_compile_options(flutter_secure_storage_linux_plugin PRIVATE -Wno-deprecated-literal-operator)
 endif()

@@ -56,3 +56,5 @@ android/key.properties
 *.cvault.*
 !test/fixtures/*.cvault
 .vscode/
+
+/artifacts/

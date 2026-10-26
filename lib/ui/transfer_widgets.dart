@@ -170,49 +170,96 @@ class ScanScreen extends StatefulWidget {
 }
 
 class _ScanScreenState extends State<ScanScreen> {
-  final scanner = MobileScannerController();
+  final qrKey = GlobalKey(debugLabel: 'encrypted-transfer-scanner');
   final receiver = TransferReceiver();
+  StreamSubscription<Barcode>? subscription;
+  QRViewController? camera;
   bool completed = false;
-  String hint =
-      'Yalnızca CipherVault 2 ile oluşturulan şifreli QR kodları kabul edilir.';
+  String? lastCode;
+  DateTime? lastSeen;
+  String hint = 'Diğer cihazdaki şifreli aktarım kodunu okut.';
+
+  void onCreated(QRViewController controller) {
+    camera = controller;
+    subscription = controller.scannedDataStream.listen((barcode) {
+      final raw = barcode.code;
+      if (!mounted || completed || raw == null) return;
+      final now = DateTime.now();
+      if (raw == lastCode &&
+          lastSeen != null &&
+          now.difference(lastSeen!) < const Duration(seconds: 1)) {
+        return;
+      }
+      lastCode = raw;
+      lastSeen = now;
+      try {
+        final bytes = receiver.accept(raw);
+        if (bytes != null) {
+          completed = true;
+          Navigator.pop(context, bytes);
+          return;
+        }
+        setState(
+          () => hint = '${receiver.count} / ${receiver.total} parça alındı.',
+        );
+      } catch (_) {
+        setState(
+          () => hint =
+              'Bu QR okunamadı. Aynı aktarımın şifreli parçalarını okut.',
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
+    subscription?.cancel();
     receiver.clear();
-    scanner.dispose();
+    // QRView owns and disposes its native camera controller.
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Şifreli QR tara')),
+    appBar: AppBar(
+      title: const Text('Şifreli QR tara'),
+      actions: [
+        IconButton(
+          tooltip: 'Feneri aç / kapat',
+          icon: const Icon(Icons.flashlight_on_outlined),
+          onPressed: () async {
+            try {
+              await camera?.toggleFlash();
+            } catch (_) {
+              if (context.mounted)
+                message(context, 'Fener bu cihazda kullanılamıyor.');
+            }
+          },
+        ),
+      ],
+    ),
     body: Column(
       children: [
         Expanded(
-          child: MobileScanner(
-            controller: scanner,
-            onDetect: (capture) {
-              if (completed) return;
-              for (final code in capture.barcodes) {
-                if (code.rawValue == null) continue;
-                try {
-                  final bytes = receiver.accept(code.rawValue!);
-                  if (bytes != null) {
-                    completed = true;
-                    Navigator.pop(context, bytes);
-                    return;
-                  }
-                  setState(
-                    () => hint =
-                        '${receiver.count} / ${receiver.total} parça alındı.',
-                  );
-                } catch (_) {
-                  setState(
-                    () => hint =
-                        'Bu QR okunamadı. Aynı aktarımın şifreli parçalarını okut.',
-                  );
-                }
+          child: QRView(
+            key: qrKey,
+            onQRViewCreated: onCreated,
+            formatsAllowed: const [BarcodeFormat.qrcode],
+            onPermissionSet: (_, granted) {
+              if (!granted && mounted) {
+                setState(
+                  () => hint =
+                      'QR taramak için kamera izni gerekli. Dosya aktarımını da kullanabilirsin.',
+                );
               }
             },
+            overlay: QrScannerOverlayShape(
+              borderColor: Theme.of(context).colorScheme.primary,
+              borderRadius: 20,
+              borderLength: 32,
+              borderWidth: 4,
+              cutOutSize: 280,
+            ),
           ),
         ),
         Padding(

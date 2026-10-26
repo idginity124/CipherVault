@@ -400,14 +400,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  mobile_scanner:
-    dependency: "direct main"
-    description:
-      name: mobile_scanner
-      sha256: d234581c090526676fd8fab4ada92f35c6746e3fb4f05a399665d75a399fb760
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.3"
   native_toolchain_c:
     dependency: transitive
     description:
@@ -520,6 +512,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  qr_code_scanner_plus:
+    dependency: "direct main"
+    description:
+      name: qr_code_scanner_plus
+      sha256: a49eb677d59becaab21a27bf908f860fd033987777cdc04e621e4b75f97531fa
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   qr_flutter:
     dependency: "direct main"
     description:
