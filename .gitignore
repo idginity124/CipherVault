@@ -58,3 +58,5 @@ android/key.properties
 .vscode/
 
 /artifacts/
+
+/android/build/

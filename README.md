@@ -1,11 +1,11 @@
 <p align="center"><a href="README.md">English</a> &nbsp; / &nbsp; <a href="README.tr.md">Türkçe</a></p>
 <p align="center"><img src="assets/readme-hero.en.svg" width="840" alt="CipherVault — an offline encrypted vault for Android, Linux and Windows"></p>
-<p align="center"><a href="BUILDING.md">Build from source</a> &nbsp; / &nbsp; <a href="SECURITY.md">Security</a> &nbsp; / &nbsp; <a href="PRIVACY.md">Privacy</a> &nbsp; / &nbsp; <a href="LICENSE">GPLv3</a></p>
+<p align="center"><a href="https://github.com/idginity124/CipherVault/releases/tag/v2.0.1">2.0.1 preview packages</a> &nbsp; / &nbsp; <a href="BUILDING.md">Build from source</a> &nbsp; / &nbsp; <a href="SECURITY.md">Security</a> &nbsp; / &nbsp; <a href="PRIVACY.md">Privacy</a> &nbsp; / &nbsp; <a href="LICENSE">GPLv3</a></p>
 
 <p align="center">One Flutter app for passwords, account details and private notes.<br>A shared encrypted vault format, with a workspace that adapts to mobile and desktop.</p>
 <p align="center"><strong>Version 2 is a development preview.</strong> Not independently audited. Existing v1 binaries in Releases belong to the retired implementation.</p>
 
-<p align="center"><a href="test/goldens/desktop.png"><img src="test/goldens/desktop.png" width="840" alt="CipherVault desktop layout with synthetic sample records"></a><br><sub>Desktop preview with sample data.</sub></p>
+<p align="center"><a href="test/goldens/desktop-detail.png"><img src="test/goldens/desktop-detail.png" width="840" alt="CipherVault desktop layout with synthetic sample records"></a><br><sub>Desktop preview with sample data.</sub></p>
 <details>
 <summary>Mobile preview</summary>
 <p align="center"><img src="test/goldens/mobile.png" width="300" alt="CipherVault mobile layout with synthetic sample records"></p>
@@ -36,13 +36,13 @@ flutter pub get
 flutter run -d linux
 ```
 
-See [BUILDING.md](BUILDING.md) for Windows/Android commands, signing, data locations and migration. Python CVLT v0/v1 vaults can be imported. The previous mobile Hive store has an explicit read-only migration path; access depends on the original application identity and signing key. Do not uninstall an existing app before exporting its data.
+See [BUILDING.md](BUILDING.md) for Windows/Android commands, signing, data locations and migration, and the [distribution guide](docs/STORE-GUIDE.tr.md) for release packages. Python CVLT v0/v1 vaults can be imported. The previous mobile Hive store has an explicit read-only migration path; access depends on the original application identity and signing key. Do not uninstall an existing app before exporting its data.
 
 **Android identity:** `com.bulgan.ciphervault`. Platform runner folders are part of the same Flutter project; the application logic lives in `lib/`.
 
 ## Validation and contribution
 
-Linux release build and native launch were verified locally. An Android ARM64 preview was built and signature-checked. Thirteen tests cover encryption interoperability, migration, transfer bounds, session races and responsive UI. Windows native builds and physical Android camera/upgrade checks are still pending. [Validation scope](docs/VALIDATION.md).
+Linux release build and native launch were verified locally. An Android ARM64 preview was built and signature-checked. Thirteen tests cover encryption interoperability, migration, transfer bounds, session races and responsive UI. Windows x64 was compiled and packaged on Windows; Store certification and physical Android camera/upgrade checks are still pending. [Validation scope](docs/VALIDATION.md).
 
 [Contributions](CONTRIBUTING.md) are welcome. Do not submit real vaults, passwords or signing keys. CipherVault’s original code is **GPL-3.0-only**; [dependencies and fonts](THIRD_PARTY.md) retain their own licenses.
 

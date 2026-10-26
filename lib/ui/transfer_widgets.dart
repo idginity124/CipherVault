@@ -231,8 +231,9 @@ class _ScanScreenState extends State<ScanScreen> {
             try {
               await camera?.toggleFlash();
             } catch (_) {
-              if (context.mounted)
+              if (context.mounted) {
                 message(context, 'Fener bu cihazda kullanılamıyor.');
+              }
             }
           },
         ),

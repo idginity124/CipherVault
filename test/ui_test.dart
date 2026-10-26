@@ -60,8 +60,8 @@ void main() {
     await icons.load();
   });
   for (final (name, size) in [
-    ('desktop', const Size(1280, 820)),
-    ('mobile', const Size(390, 844)),
+    ('desktop', const Size(1440, 900)),
+    ('mobile', const Size(390, 780)),
   ]) {
     testWidgets('$name layout, navigation and manual lock remove secrets', (
       tester,
@@ -84,6 +84,10 @@ void main() {
       await tester.tap(find.text('Demo Mail'));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+      await expectLater(
+        find.byType(CipherVaultApp),
+        matchesGoldenFile('goldens/$name-detail.png'),
+      );
       // Locking from background must also dismiss the mobile detail route.
       for (final state in [
         AppLifecycleState.inactive,
